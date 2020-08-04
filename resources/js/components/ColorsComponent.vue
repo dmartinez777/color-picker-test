@@ -91,6 +91,7 @@
         }
     }
 </script>
+<!-- Normally I would keep all my css in a separate .css file -->
 <style>
     body {
         background-color: #1d2124;
