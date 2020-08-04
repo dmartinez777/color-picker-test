@@ -3,11 +3,15 @@
         <h1>{{title}}</h1>
         <form id="colorForm" @submit.prevent="addColor">
             <input v-model="selectedColor" type="color" name="color" value="#30AF30">
-            <button>Add</button>
+            <button class="btn btn-success">Add</button>
         </form>
-        <div v-for="(color, index) in allColors" :key="color.id" :id="index">
-            <input :id="color.id" type="color" name="color" :value="color.hex" @change="editColor(index, $event.target.value)">
-            <button @click.prevent="deleteColor(color.id, index)">Delete</button>
+        <div v-for="(color, index) in allColors" :key="color.id" :id="index" class="input-group mb-3">
+            <label class="form-control" :style="{ backgroundColor: color.hex }">
+                <input :id="color.id" type="color" name="color" :value="color.hex" @change="editColor(index, $event.target.value)">
+            </label>
+            <div class="input-group-append">
+                <button @click.prevent="deleteColor(index)" class="btn btn-danger btn-md">Delete</button>
+            </div>
         </div>
     </div>
 </template>
@@ -55,7 +59,7 @@
                 let currentColor = this.allColors[index];
                 if(newColor !== currentColor.hex) {
                     axios.post('api/color/edit', {id: currentColor.id, color: newColor}).then(response => {
-                        console.log(response.data);
+                        this.allColors[index].hex = newColor;
                     })
                 }
             },
@@ -73,3 +77,12 @@
         }
     }
 </script>
+<style>
+    body {
+        background-color: #1d2124;
+        color: #b0d4f1;
+    }
+    .input-group input[type="color"] {
+        display: none;
+    }
+</style>
