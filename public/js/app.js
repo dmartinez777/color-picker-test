@@ -1926,6 +1926,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ColorsComponent",
   data: function data() {
@@ -1960,6 +1967,9 @@ __webpack_require__.r(__webpack_exports__);
           if (response.data.success) {
             _this2.allColors.push({
               id: response.data.id,
+              red: response.data.red,
+              green: response.data.green,
+              blue: response.data.blue,
               hex: _this2.selectedColor
             });
           }
@@ -6442,7 +6452,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nbody {\n    background-color: #1d2124;\n    color: #b0d4f1;\n}\n.input-group input[type=\"color\"] {\n    display: none;\n}\n", ""]);
+exports.push([module.i, "\nbody {\n    background-color: #1d2124;\n    color: #f7f7f7;\n}\ninput[type=\"color\"] {\n    -moz-appearance: menuradio;\n    -webkit-appearance: inherit !important;\n            appearance: inherit !important;\n    border: none;\n}\n.input-group input[type=\"color\"] {\n    display: none;\n}\n", ""]);
 
 // exports
 
@@ -38239,62 +38249,81 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "container" },
     [
       _c("h1", [_vm._v(_vm._s(_vm.title))]),
       _vm._v(" "),
-      _c(
-        "form",
-        {
-          attrs: { id: "colorForm" },
-          on: {
-            submit: function($event) {
-              $event.preventDefault()
-              return _vm.addColor($event)
-            }
-          }
-        },
-        [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.selectedColor,
-                expression: "selectedColor"
-              }
-            ],
-            attrs: { type: "color", name: "color", value: "#30AF30" },
-            domProps: { value: _vm.selectedColor },
+      _c("div", { staticClass: "text-right" }, [
+        _c(
+          "form",
+          {
+            attrs: { id: "colorForm" },
             on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.selectedColor = $event.target.value
+              submit: function($event) {
+                $event.preventDefault()
+                return _vm.addColor($event)
               }
             }
-          }),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn btn-success" }, [_vm._v("Add")])
-        ]
-      ),
+          },
+          [
+            _c("label", [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.selectedColor,
+                    expression: "selectedColor"
+                  }
+                ],
+                attrs: { type: "color", name: "color", value: "#30AF30" },
+                domProps: { value: _vm.selectedColor },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.selectedColor = $event.target.value
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("button", { staticClass: "btn btn-outline-success" }, [
+              _vm._v("Submit")
+            ])
+          ]
+        )
+      ]),
       _vm._v(" "),
       _vm._l(_vm.allColors, function(color, index) {
         return _c(
           "div",
           {
             key: color.id,
-            staticClass: "input-group mb-3",
+            staticClass: "input-group mb-3 my-2",
             attrs: { id: index }
           },
           [
             _c(
               "label",
               {
-                staticClass: "form-control",
+                staticClass: "form-control text-white-50 border-0",
                 style: { backgroundColor: color.hex }
               },
               [
+                _c("strong", [
+                  _vm._v(
+                    "RGB(" +
+                      _vm._s(color.red) +
+                      "," +
+                      _vm._s(color.green) +
+                      ", " +
+                      _vm._s(color.blue) +
+                      ")"
+                  )
+                ]),
+                _vm._v(" "),
                 _c("input", {
                   attrs: { id: color.id, type: "color", name: "color" },
                   domProps: { value: color.hex },
@@ -38319,7 +38348,7 @@ var render = function() {
                     }
                   }
                 },
-                [_vm._v("Delete")]
+                [_vm._v("x")]
               )
             ])
           ]

@@ -1,16 +1,23 @@
 <template>
-    <div>
+    <div class="container">
         <h1>{{title}}</h1>
-        <form id="colorForm" @submit.prevent="addColor">
-            <input v-model="selectedColor" type="color" name="color" value="#30AF30">
-            <button class="btn btn-success">Add</button>
-        </form>
-        <div v-for="(color, index) in allColors" :key="color.id" :id="index" class="input-group mb-3">
-            <label class="form-control" :style="{ backgroundColor: color.hex }">
+       <!-- Form - New color -->
+        <div class="text-right">
+            <form id="colorForm" @submit.prevent="addColor">
+                <label>
+                    <input v-model="selectedColor" type="color" name="color" value="#30AF30">
+                </label>
+                <button class="btn btn-outline-success">Submit</button>
+            </form>
+        </div>
+        <!-- Color list -->
+        <div v-for="(color, index) in allColors" :key="color.id" :id="index" class="input-group mb-3 my-2">
+            <label class="form-control text-white-50 border-0" :style="{ backgroundColor: color.hex }">
+                <strong>RGB({{color.red}},{{color.green}}, {{color.blue}})</strong>
                 <input :id="color.id" type="color" name="color" :value="color.hex" @change="editColor(index, $event.target.value)">
             </label>
             <div class="input-group-append">
-                <button @click.prevent="deleteColor(index)" class="btn btn-danger btn-md">Delete</button>
+                <button @click.prevent="deleteColor(index)" class="btn btn-danger btn-md">x</button>
             </div>
         </div>
     </div>
@@ -47,7 +54,11 @@
                         .then(response => {
                             if (response.data.success) {
                                 this.allColors.push({
-                                    id: response.data.id, hex: this.selectedColor
+                                    id: response.data.id,
+                                    red: response.data.red,
+                                    green: response.data.green,
+                                    blue: response.data.blue,
+                                    hex: this.selectedColor,
                                 })
                             }
                         });
@@ -80,7 +91,12 @@
 <style>
     body {
         background-color: #1d2124;
-        color: #b0d4f1;
+        color: #f7f7f7;
+    }
+    input[type="color"] {
+        -moz-appearance: menuradio;
+        appearance: inherit !important;
+        border: none;
     }
     .input-group input[type="color"] {
         display: none;

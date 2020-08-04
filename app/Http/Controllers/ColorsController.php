@@ -32,11 +32,17 @@ class ColorsController extends Controller
         if (strpos("#", $color) === false) {
             $hexToRGB = $this->toRGB($color);
             $newColor = Colors::create(['red' => $hexToRGB[0], 'green' => $hexToRGB[1], 'blue' => $hexToRGB[2]]);
-            if($newColor) {
-                return response()->json(['success' => true, 'id' => $newColor->id], 200);
+            if ($newColor) {
+                return response()->json([
+                    'success' => true,
+                    'id'      => $newColor->id,
+                    'red'     => $hexToRGB[0],
+                    'green'   => $hexToRGB[1],
+                    'blue'    => $hexToRGB[2]
+                ], 200);
             }
         }
-        return  response()->json(['success' => false], 200);
+        return response()->json(['success' => false], 200);
     }
 
     /**
