@@ -1928,7 +1928,13 @@ __webpack_require__.r(__webpack_exports__);
     return {
       title: "Pick a Color",
       selectedColor: null,
-      allColors: []
+      allColors: [{
+        id: 0,
+        red: 0,
+        green: 0,
+        blue: 0,
+        hex: ''
+      }]
     };
   },
   created: function created() {
@@ -1936,16 +1942,50 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get('api/color/all').then(function (response) {
       _this.allColors = response.data;
-      console.log(response.data);
     });
   },
   methods: {
+    //Add our selected color.
     addColor: function addColor() {
+      var _this2 = this;
+
       if (this.selectedColor) {
         axios.post('api/color/create', {
           color: this.selectedColor
         }).then(function (response) {
-          return console.log(response);
+          if (response.data.success) {
+            _this2.allColors.push({
+              id: response.data.id,
+              hex: _this2.selectedColor
+            });
+          }
+        });
+      }
+    },
+    //Edit color
+    editColor: function editColor(index, newColor) {
+      var currentColor = this.allColors[index];
+
+      if (newColor !== currentColor.hex) {
+        axios.post('api/color/edit', {
+          id: currentColor.id,
+          color: newColor
+        }).then(function (response) {
+          console.log(response.data);
+        });
+      }
+    },
+    //Delete color on server and array.
+    deleteColor: function deleteColor(index) {
+      var _this3 = this;
+
+      if (confirm("Are you sure you would like to delete this color?")) {
+        axios.post('api/color/delete', {
+          id: this.allColors[index].id
+        }).then(function (response) {
+          if (response.data.success) {
+            _this3.allColors.splice(index, 1);
+          }
         });
       }
     }
@@ -37588,20 +37628,29 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _vm._l(_vm.allColors, function(color) {
-        return _c("div", { key: color.id }, [
+      _vm._l(_vm.allColors, function(color, index) {
+        return _c("div", { key: color.id, attrs: { id: index } }, [
           _c("input", {
-            attrs: { id: "C" + color.id, type: "color", name: "color" },
-            domProps: { value: color.hex }
+            attrs: { id: color.id, type: "color", name: "color" },
+            domProps: { value: color.hex },
+            on: {
+              change: function($event) {
+                return _vm.editColor(index, $event.target.value)
+              }
+            }
           }),
-          _vm._v(
-            "\n        " +
-              _vm._s(color.red) +
-              " " +
-              _vm._s(color.green) +
-              " " +
-              _vm._s(color.blue) +
-              "\n    "
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.deleteColor(color.id, index)
+                }
+              }
+            },
+            [_vm._v("Delete")]
           )
         ])
       })
