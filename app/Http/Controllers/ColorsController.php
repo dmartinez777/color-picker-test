@@ -15,8 +15,9 @@ class ColorsController extends Controller
     /**
      * @return JsonResponse
      */
-    public function all() {
-        $colors = Colors::all()->map(fn($colors) => collect($colors)->only(['id', 'rgb', 'hex']));
+    public function all()
+    {
+        $colors = Colors::all()->map(fn ($colors) => collect($colors)->only(['id', 'rgb', 'hex']));
         //$colors->rgb = $this->toRGB($colors->hex); #Nah! in this case, we want the original converted values from db
         return response()->json($colors, 200);
     }
@@ -25,8 +26,8 @@ class ColorsController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function add(Request $request) {
-
+    public function add(Request $request)
+    {
         $request->validate(['color' => 'required|string']); //@todo: Needs regex validation
         $color = $request->get('color');
 
@@ -38,7 +39,6 @@ class ColorsController extends Controller
             if ($newColor) {
                 return response()->json(['success' => true, 'id' => $newColor->id, 'rgb' => $hexToRGB], 200);
             }
-
         }
         return response()->json(['success' => false], 200);
     }
@@ -47,7 +47,8 @@ class ColorsController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function edit(Request $request) {
+    public function edit(Request $request)
+    {
         $request->validate([
             'id'    => 'required|int',
             'color' => 'required|string'
@@ -63,7 +64,8 @@ class ColorsController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function delete(Request $request) {
+    public function delete(Request $request)
+    {
         $request->validate(['id' => 'required|int']);
         $isDeleted = Colors::find((int)$request->get('id'))->delete();
         return response()->json(['success' => $isDeleted], 200);
@@ -75,10 +77,11 @@ class ColorsController extends Controller
      * @param string $hex
      * @return array
      */
-    private function toRGB(string $hex) {
+    private function toRGB(string $hex)
+    {
         if (strlen($hex) === 4) {
             $rgb = sscanf($hex, "#%1x%1x%1x");
-        } else{
+        } else {
             $rgb = sscanf($hex, "#%02x%02x%02x");
         }
 
