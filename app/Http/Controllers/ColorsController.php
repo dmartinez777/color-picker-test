@@ -17,7 +17,7 @@ class ColorsController extends Controller
      */
     public function all() {
         $colors = Colors::all()->map(fn($colors) => collect($colors)->only(['id', 'rgb', 'hex']));
-        //$colors->rgb = $this->toRGB($colors->hex); #Nah! in this case, we should want original values from db
+        //$colors->rgb = $this->toRGB($colors->hex); #Nah! in this case, we want the original converted values from db
         return response()->json($colors, 200);
     }
 
