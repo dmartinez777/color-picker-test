@@ -16,7 +16,9 @@ class ColorsController extends Controller
      * @return JsonResponse
      */
     public function all() {
-        return response()->json(Colors::all(), 200);
+        $colors = Colors::all()->map(fn($colors) => collect($colors)->only(['id', 'rgb', 'hex']));
+        //$colors->rgb = $this->toRGB($colors->hex); #Nah! in this case, we should want original values from db
+        return response()->json($colors, 200);
     }
 
     /**
@@ -31,16 +33,12 @@ class ColorsController extends Controller
         // is it Hex?
         if (strpos("#", $color) === false) {
             $hexToRGB = $this->toRGB($color);
-            $newColor = Colors::create(['red' => $hexToRGB[0], 'green' => $hexToRGB[1], 'blue' => $hexToRGB[2]]);
+            $newColor = Colors::create($hexToRGB);
+
             if ($newColor) {
-                return response()->json([
-                    'success' => true,
-                    'id'      => $newColor->id,
-                    'red'     => $hexToRGB[0],
-                    'green'   => $hexToRGB[1],
-                    'blue'    => $hexToRGB[2]
-                ], 200);
+                return response()->json(['success' => true, 'id' => $newColor->id, 'rgb' => $hexToRGB], 200);
             }
+
         }
         return response()->json(['success' => false], 200);
     }
@@ -56,10 +54,9 @@ class ColorsController extends Controller
         ]);
 
         $hexToRGB = $this->toRGB($request->color);
-        $update   = Colors::find($request->id)->update([
-            'red' => $hexToRGB[0], 'green' => $hexToRGB[1], 'blue' => $hexToRGB[2]
-        ]);
-        return response()->json($update, 200);
+        $update   = Colors::find($request->id)->update($hexToRGB);
+
+        return response()->json(['success' => $update, 'rgb' => $hexToRGB], 200);
     }
 
     /**
@@ -85,6 +82,6 @@ class ColorsController extends Controller
             $rgb = sscanf($hex, "#%02x%02x%02x");
         }
 
-        return $rgb;
+        return array_combine(['red', 'green', 'blue'], $rgb);
     }
 }

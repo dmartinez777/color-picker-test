@@ -13,7 +13,7 @@
         <!-- Color list -->
         <div v-for="(color, index) in allColors" :key="color.id" :id="index" class="input-group mb-3 my-2">
             <label class="form-control text-white-50 border-0" :style="{ backgroundColor: color.hex }">
-                <strong>RGB({{color.red}},{{color.green}}, {{color.blue}})</strong>
+                <strong>RGB({{color.rgb.red}},{{color.rgb.green}}, {{color.rgb.blue}})</strong>
                 <input :id="color.id" type="color" name="color" :value="color.hex" @change="editColor(index, $event.target.value)">
             </label>
             <div class="input-group-append">
@@ -32,9 +32,11 @@
                 selectedColor: null,
                 allColors: [{
                     id: 0,
-                    red: 0,
-                    green: 0,
-                    blue: 0,
+                    rgb: {
+                        red: 0,
+                        green: 0,
+                        blue: 0,
+                    },
                     hex: ''
                 }]
             }
@@ -55,9 +57,7 @@
                             if (response.data.success) {
                                 this.allColors.push({
                                     id: response.data.id,
-                                    red: response.data.red,
-                                    green: response.data.green,
-                                    blue: response.data.blue,
+                                    rgb: response.data.rgb,
                                     hex: this.selectedColor,
                                 })
                             }
@@ -70,7 +70,10 @@
                 let currentColor = this.allColors[index];
                 if(newColor !== currentColor.hex) {
                     axios.post('api/color/edit', {id: currentColor.id, color: newColor}).then(response => {
-                        this.allColors[index].hex = newColor;
+                        if (response.data.success) {
+                            this.allColors[index].hex = newColor;
+                            this.allColors[index].rgb = response.data.rgb;
+                        }
                     })
                 }
             },

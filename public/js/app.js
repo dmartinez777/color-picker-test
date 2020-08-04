@@ -1941,9 +1941,11 @@ __webpack_require__.r(__webpack_exports__);
       selectedColor: null,
       allColors: [{
         id: 0,
-        red: 0,
-        green: 0,
-        blue: 0,
+        rgb: {
+          red: 0,
+          green: 0,
+          blue: 0
+        },
         hex: ''
       }]
     };
@@ -1967,9 +1969,7 @@ __webpack_require__.r(__webpack_exports__);
           if (response.data.success) {
             _this2.allColors.push({
               id: response.data.id,
-              red: response.data.red,
-              green: response.data.green,
-              blue: response.data.blue,
+              rgb: response.data.rgb,
               hex: _this2.selectedColor
             });
           }
@@ -1987,7 +1987,10 @@ __webpack_require__.r(__webpack_exports__);
           id: currentColor.id,
           color: newColor
         }).then(function (response) {
-          _this3.allColors[index].hex = newColor;
+          if (response.data.success) {
+            _this3.allColors[index].hex = newColor;
+            _this3.allColors[index].rgb = response.data.rgb;
+          }
         });
       }
     },
@@ -38315,11 +38318,11 @@ var render = function() {
                 _c("strong", [
                   _vm._v(
                     "RGB(" +
-                      _vm._s(color.red) +
+                      _vm._s(color.rgb.red) +
                       "," +
-                      _vm._s(color.green) +
+                      _vm._s(color.rgb.green) +
                       ", " +
-                      _vm._s(color.blue) +
+                      _vm._s(color.rgb.blue) +
                       ")"
                   )
                 ]),
