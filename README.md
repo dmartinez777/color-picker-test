@@ -1,6 +1,6 @@
 # Three29 Color Picker
 An assessment created for Three29.
-It is just a simple CRUD color picker created in Laravel & Vue.js 2
+A simple CRUD color picker created in Laravel & Vue.js 2
 
 ## Requirement
 - PHP 7.4
